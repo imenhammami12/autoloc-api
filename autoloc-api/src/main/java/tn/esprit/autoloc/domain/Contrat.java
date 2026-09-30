@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "contrat")
@@ -23,11 +22,12 @@ public class Contrat {
 
     private boolean valide;
 
+    // Chargement du contrat => chargement des paiements
     @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Paiement> paiements = new ArrayList<>();
 
+    // Côté inverse du OneToOne
     @OneToOne(mappedBy = "contrat")
     private Reservation reservation;
-
 }

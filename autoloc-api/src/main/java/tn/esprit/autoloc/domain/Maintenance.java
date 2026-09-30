@@ -17,6 +17,7 @@ public class Maintenance {
     private LocalDate dateFin;
     private String description;
 
+    // Unidirectionnel (comme dans le diagramme)
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicule_id")
     private Vehicule vehicule;

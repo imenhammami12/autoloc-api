@@ -3,8 +3,7 @@ package tn.esprit.autoloc.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "client")
@@ -25,6 +24,7 @@ public class Client {
     private String numPermis;
     private LocalDate dateInscription;
 
+    // Chargement lié (EAGER), suppression liée (REMOVE)
     @OneToMany(mappedBy = "client", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Reservation> reservations = new ArrayList<>();

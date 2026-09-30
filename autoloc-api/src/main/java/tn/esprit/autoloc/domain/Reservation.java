@@ -27,8 +27,8 @@ public class Reservation {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @OneToOne
+    // La clé contrat_id est dans la table reservation (côté propriétaire)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contrat_id")
     private Contrat contrat;
-
 }

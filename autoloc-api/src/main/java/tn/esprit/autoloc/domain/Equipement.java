@@ -2,9 +2,7 @@ package tn.esprit.autoloc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "equipement")
@@ -16,6 +14,8 @@ public class Equipement {
     private Long idEquipement;
 
     private String libelle;
+
+
     @ManyToMany(mappedBy = "equipements")
     @Builder.Default
     private Set<Vehicule> vehicules = new HashSet<>();
