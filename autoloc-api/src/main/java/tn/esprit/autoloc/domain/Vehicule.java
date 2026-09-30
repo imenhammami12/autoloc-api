@@ -27,4 +27,8 @@ public class Vehicule {
 
     @Enumerated(EnumType.STRING)
     private StatutVehicule statut;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agence_id")   // nullable par défaut : le véhicule peut exister sans agence
+    private Agence agence;
 }
