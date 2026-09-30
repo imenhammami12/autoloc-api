@@ -28,4 +28,9 @@ public class Agence {
         vehicules.add(v);
         v.setAgence(this);
     }
+
+    @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Employe> employes = new ArrayList<>();
+
 }
