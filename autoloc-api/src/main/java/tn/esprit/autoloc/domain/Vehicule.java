@@ -40,6 +40,8 @@ public class Vehicule {
     private List<Reservation> reservations = new ArrayList<>();
 
 
+
+
     @ManyToMany
     @Builder.Default
     private Set<Equipement> equipements = new HashSet<>();
