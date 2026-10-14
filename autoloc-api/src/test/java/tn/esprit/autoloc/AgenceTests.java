@@ -8,12 +8,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import tn.esprit.autoloc.domain.*;
 import tn.esprit.autoloc.repository.IAgenceRepository;
+import tn.esprit.autoloc.service.IAgenceService;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
@@ -25,10 +28,12 @@ public class AgenceTests {
     @Autowired
     private IAgenceRepository fullAgenceRepository;
 
+    @Autowired
+    private IAgenceService agenceService;
+
     // ---------- AJOUT ----------
 
     private void addAgence(CrudRepository<Agence, Long> repository) {
-        // information supplémentaire pour éviter les doublons d'immatriculation
         int suffixe = Math.abs((int) System.currentTimeMillis());
 
         Agence agence = Agence.builder()
@@ -100,7 +105,7 @@ public class AgenceTests {
         loadAgence(fullAgenceRepository, "JpaRepository (full)");
     }
 
-    // ---------- PARTIE II : TRI ----------
+    // ---------- TRI ----------
 
     @Test
     public void loadSortedAgences() {
@@ -115,7 +120,7 @@ public class AgenceTests {
         fail(sb.toString());
     }
 
-    // ---------- PARTIE II : PAGINATION ----------
+    // ---------- PAGINATION ----------
 
     @Test
     public void loadPagedAgences() {
@@ -133,7 +138,24 @@ public class AgenceTests {
 
         fail(sb.toString());
     }
+
+    // ---------- CHAPITRE 5 : SERVICE ----------
+
+    @Test
+    public void createAgence() {
+        Agence agence = Agence.builder()
+                .adresse("5 Avenue Habib Bourguiba")
+                .nom("Agence Sousse")
+                .telephone("73100200")
+                .ville("Sousse")
+                .build();
+
+        Agence saved = agenceService.create(agence);
+
+        assertNotNull(saved.getIdAgence());
+    }
 }
 
+@Repository
 interface AgenceRepositoryMock extends CrudRepository<Agence, Long> {
 }
