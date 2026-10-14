@@ -17,7 +17,6 @@ public abstract class GenericServiceImpl<T, ID> implements IGenericService<T, ID
 
     protected abstract ID getId(T entity);
 
-    // copie les champs de "source" vers "target" (entité existante)
     protected abstract void setFields(T source, T target);
 
     @Override
