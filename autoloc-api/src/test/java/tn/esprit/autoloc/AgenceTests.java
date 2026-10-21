@@ -12,7 +12,11 @@ import org.springframework.stereotype.Repository;
 import tn.esprit.autoloc.domain.*;
 import tn.esprit.autoloc.repository.IAgenceRepository;
 import tn.esprit.autoloc.service.IAgenceService;
+import tn.esprit.autoloc.exception.ResourceNotFoundException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -153,6 +157,52 @@ public class AgenceTests {
         Agence saved = agenceService.create(agence);
 
         assertNotNull(saved.getIdAgence());
+    }    @Test
+    public void createAgenceAvecIdLeveException() {
+        Agence agence = Agence.builder()
+                .adresse("x").nom("x").telephone("x").ville("x")
+                .build();
+        agence.setIdAgence(1L);
+
+        assertThrows(IllegalArgumentException.class, () -> agenceService.create(agence));
+    }
+
+    @Test
+    public void createAgenceInvalideLeveException() {
+        Agence agence = Agence.builder().nom("").build();
+
+        assertThrows(IllegalArgumentException.class, () -> agenceService.create(agence));
+    }
+
+    @Test
+    public void findByIdIntrouvable() {
+        assertThrows(ResourceNotFoundException.class, () -> agenceService.findById(999999L));
+    }
+
+    @Test
+    public void deleteByIdIntrouvable() {
+        assertThrows(ResourceNotFoundException.class, () -> agenceService.deleteById(999999L));
+    }
+
+    @Test
+    public void updateAgence() {
+        Agence saved = agenceService.create(Agence.builder()
+                .adresse("a").nom("Avant").telephone("1").ville("v").build());
+
+        Agence modif = Agence.builder()
+                .adresse("a").nom("Apres").telephone("1").ville("v").build();
+
+        Agence updated = agenceService.update(saved.getIdAgence(), modif);
+
+        assertEquals("Apres", updated.getNom());
+    }
+
+    @Test
+    public void findAllNonVide() {
+        agenceService.create(Agence.builder()
+                .adresse("a").nom("n").telephone("1").ville("v").build());
+
+        assertFalse(agenceService.findAll().isEmpty());
     }
 }
 
