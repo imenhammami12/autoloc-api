@@ -1,5 +1,6 @@
 package tn.esprit.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -27,5 +28,6 @@ public class Client {
     // Chargement lié (EAGER), suppression liée (REMOVE)
     @OneToMany(mappedBy = "client", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @Builder.Default
+    @JsonIgnore
     private List<Reservation> reservations = new ArrayList<>();
 }

@@ -1,12 +1,15 @@
 package tn.esprit.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "agence")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Agence {
 
     @Id
@@ -18,12 +21,12 @@ public class Agence {
     private String adresse;
     private String telephone;
 
-    // Chargement de l'agence => chargement des véhicules
+    @JsonIgnore
     @OneToMany(mappedBy = "agence", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Vehicule> vehicules = new ArrayList<>();
 
-    // Chargement non lié, suppression non liée
+    @JsonIgnore
     @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Employe> employes = new ArrayList<>();

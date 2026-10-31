@@ -1,5 +1,6 @@
 package tn.esprit.autoloc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
@@ -18,5 +19,6 @@ public class Equipement {
 
     @ManyToMany(mappedBy = "equipements")
     @Builder.Default
+    @JsonIgnore
     private Set<Vehicule> vehicules = new HashSet<>();
 }
