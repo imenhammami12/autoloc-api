@@ -61,7 +61,6 @@ public class BasicAgenceServiceImpl implements IAgenceService {
 
     @Override
     public void deleteById(Long id) {
-        // existsById : on ne récupère pas les données
         if (!agenceRepository.existsById(id)) {
             throw new ResourceNotFoundException("Agence", String.valueOf(id));
         }

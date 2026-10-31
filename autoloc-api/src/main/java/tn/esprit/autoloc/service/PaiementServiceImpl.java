@@ -5,7 +5,7 @@ import tn.esprit.autoloc.domain.Paiement;
 import tn.esprit.autoloc.repository.IPaiementRepository;
 
 @Service
-public class PaiementServiceImpl extends GenericServiceImpl<Paiement, Long> implements IPaiementService {
+public class PaiementServiceImpl extends ReadServiceImpl<Paiement, Long> implements IPaiementService {
 
     public PaiementServiceImpl(IPaiementRepository repository) {
         super(repository);
@@ -14,30 +14,5 @@ public class PaiementServiceImpl extends GenericServiceImpl<Paiement, Long> impl
     @Override
     protected String getEntityName() {
         return "Paiement";
-    }
-
-    @Override
-    protected Long getId(Paiement p) {
-        return p.getIdPaiement();   // adaptez au nom de votre attribut
-    }
-
-    @Override
-    protected void setFields(Paiement source, Paiement target) {
-        // lecture seule : rien à copier
-    }
-
-    @Override
-    public Paiement create(Paiement paiement) {
-        throw new UnsupportedOperationException("Paiement est en lecture seule");
-    }
-
-    @Override
-    public Paiement update(Long id, Paiement paiement) {
-        throw new UnsupportedOperationException("Paiement est en lecture seule");
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        throw new UnsupportedOperationException("Paiement est en lecture seule");
     }
 }

@@ -1,17 +1,29 @@
 package tn.esprit.autoloc.service;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import tn.esprit.autoloc.Utils;
+import tn.esprit.autoloc.calcul.VehiculeOffre;
 import tn.esprit.autoloc.domain.Agence;
+import tn.esprit.autoloc.domain.Vehicule;
+import tn.esprit.autoloc.io.IRapport;
+import tn.esprit.autoloc.io.RapportFactory;
 import tn.esprit.autoloc.repository.IAgenceRepository;
-import org.springframework.context.annotation.Primary;
 
 @Service
 @Primary
-public class AgenceServiceImpl extends GenericServiceImpl<Agence, Long> implements IAgenceService {
+public class AgenceServiceImpl extends GenericServiceImpl<Agence, Long>
+        implements IAgenceService, IAgenceSimulationService {
 
-    public AgenceServiceImpl(IAgenceRepository repository) {
+    private final IVehiculeService vehiculeService;
+    private final RapportFactory rapportFactory;
+
+    public AgenceServiceImpl(IAgenceRepository repository,
+                             IVehiculeService vehiculeService,
+                             RapportFactory rapportFactory) {
         super(repository);
+        this.vehiculeService = vehiculeService;
+        this.rapportFactory = rapportFactory;
     }
 
     @Override
@@ -44,5 +56,28 @@ public class AgenceServiceImpl extends GenericServiceImpl<Agence, Long> implemen
     @Override
     public boolean hasVehicules(Long id) {
         return !findById(id).getVehicules().isEmpty();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        findById(id).getVehicules().forEach(v -> v.setAgence(null));
+        super.deleteById(id);
+    }
+
+    // Signature inchangée : le rapport vient de la Factory
+    @Override
+    public String simuler(Agence agence, int nbJours, VehiculeOffre offre) {
+        IRapport rapport = rapportFactory.creer();
+        rapport.ajouterEntete(agence);
+
+        double total = 0;
+        for (Vehicule vehicule : agence.getVehicules()) {
+            double tarif = vehiculeService.calculTarif(vehicule, nbJours, offre);
+            rapport.ajouterLigne(vehicule.getImmatriculation() + " : " + tarif);
+            total += tarif;
+        }
+
+        rapport.ajouterTotal(total);
+        return rapport.generer();
     }
 }
