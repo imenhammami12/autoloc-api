@@ -5,24 +5,28 @@ import org.springframework.stereotype.Service;
 import tn.esprit.autoloc.Utils;
 import tn.esprit.autoloc.calcul.VehiculeOffre;
 import tn.esprit.autoloc.domain.Agence;
+import tn.esprit.autoloc.domain.Employe;
 import tn.esprit.autoloc.domain.Vehicule;
 import tn.esprit.autoloc.io.IRapport;
 import tn.esprit.autoloc.io.RapportFactory;
 import tn.esprit.autoloc.repository.IAgenceRepository;
-
+import org.springframework.transaction.annotation.Transactional;
 @Service
 @Primary
 public class AgenceServiceImpl extends GenericServiceImpl<Agence, Long>
         implements IAgenceService, IAgenceSimulationService {
 
     private final IVehiculeService vehiculeService;
+    private final IEmployeService employeService;
     private final RapportFactory rapportFactory;
 
     public AgenceServiceImpl(IAgenceRepository repository,
                              IVehiculeService vehiculeService,
+                             IEmployeService employeService,
                              RapportFactory rapportFactory) {
         super(repository);
         this.vehiculeService = vehiculeService;
+        this.employeService = employeService;
         this.rapportFactory = rapportFactory;
     }
 
@@ -64,7 +68,24 @@ public class AgenceServiceImpl extends GenericServiceImpl<Agence, Long>
         super.deleteById(id);
     }
 
-    // Signature inchangée : le rapport vient de la Factory
+
+    @Override
+    public Agence updateAvecEmployes(Long id, Agence agence) {
+        // 1. Mettre à jour d'abord l'agence
+        Agence existing = update(id, agence);
+
+        // 2. Utiliser le service des employés pour insérer les employés
+        for (Employe e : agence.getEmployes()) {
+            existing.addEmploye(e);
+            employeService.create(e);
+        }
+
+        // 3. Mettre à jour l'effectif avec la taille de la liste des employés de l'agence
+        existing.setEffectif(existing.getEmployes().size());
+        return repository.save(existing);
+    }
+
+
     @Override
     public String simuler(Agence agence, int nbJours, VehiculeOffre offre) {
         IRapport rapport = rapportFactory.creer();

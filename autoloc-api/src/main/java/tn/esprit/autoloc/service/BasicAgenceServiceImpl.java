@@ -71,4 +71,9 @@ public class BasicAgenceServiceImpl implements IAgenceService {
     public boolean hasVehicules(Long id) {
         return !findById(id).getVehicules().isEmpty();
     }
+
+    @Override
+    public Agence updateAvecEmployes(Long id, Agence agence) {
+        throw new UnsupportedOperationException("Non implémenté dans l'implémentation basique");
+    }
 }

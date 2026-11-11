@@ -21,12 +21,13 @@ public class Agence {
     private String adresse;
     private String telephone;
 
+    private int effectif;
+
     @JsonIgnore
     @OneToMany(mappedBy = "agence", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Vehicule> vehicules = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "agence", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Employe> employes = new ArrayList<>();
@@ -34,5 +35,15 @@ public class Agence {
     public void addVehicule(Vehicule v) {
         vehicules.add(v);
         v.setAgence(this);
+    }
+
+    public void addEmploye(Employe e) {
+        employes.add(e);
+        e.setAgence(this);
+    }
+
+    public void removeEmploye(Employe e) {
+        employes.remove(e);
+        e.setAgence(null);
     }
 }

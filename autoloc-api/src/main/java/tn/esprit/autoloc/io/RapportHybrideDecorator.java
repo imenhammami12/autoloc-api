@@ -8,7 +8,6 @@ public class RapportHybrideDecorator extends RapportDecorator {
         super(rapport);
     }
 
-    // L'entête va sur la console et n'est PAS ajouté au texte retourné
     @Override
     public void ajouterEntete(Agence a) {
         System.out.println("=== Agence " + a.getIdAgence()
@@ -16,11 +15,8 @@ public class RapportHybrideDecorator extends RapportDecorator {
                 + " - Tel : " + a.getTelephone() + " ===");
     }
 
-    // Les lignes par véhicule ne sont pas retournées : seul le total l'est
     @Override
     public void ajouterLigne(String texte) {
-        // ignoré volontairement
     }
 
-    // ajouterTotal() et generer() sont délégués au rapport de base par @Delegate
 }

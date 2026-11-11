@@ -82,4 +82,10 @@ public class AgenceController {
         Agence agence = agenceService.findById(id);
         return simulationService.simuler(agence, nbJours, offre);
     }
+
+    @Operation(summary = "Mettre à jour une agence et ajouter une liste d'employés")
+    @PutMapping("/updateAvecEmployes/{id}")
+    public Agence updateAvecEmployes(@PathVariable Long id, @RequestBody Agence agence) {
+        return agenceService.updateAvecEmployes(id, agence);
+    }
 }
