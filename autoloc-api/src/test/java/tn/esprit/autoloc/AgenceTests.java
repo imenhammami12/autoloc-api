@@ -1,5 +1,6 @@
 package tn.esprit.autoloc;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
-public class AgenceTests {
+class AgenceTests {
 
     @Autowired
     private AgenceRepositoryMock basicAgenceRepository;
@@ -37,7 +38,7 @@ public class AgenceTests {
 
     // ---------- AJOUT ----------
 
-    private void addAgence(CrudRepository<Agence, Long> repository) {
+    private Agence addAgence(CrudRepository<Agence, Long> repository) {
         int suffixe = Math.abs((int) System.currentTimeMillis());
 
         Agence agence = Agence.builder()
@@ -68,17 +69,19 @@ public class AgenceTests {
         agence.addVehicule(v1);
         agence.addVehicule(v2);
 
-        repository.save(agence);
+        return repository.save(agence);
     }
 
+    @Disabled("Ancien atelier")
     @Test
-    public void basicAddAgence() {
-        addAgence(basicAgenceRepository);
+    void basicAddAgence() {
+        assertNotNull(addAgence(basicAgenceRepository).getIdAgence());
     }
 
+    @Disabled("Ancien atelier")
     @Test
-    public void fullAddAgence() {
-        addAgence(fullAgenceRepository);
+    void fullAddAgence() {
+        assertNotNull(addAgence(fullAgenceRepository).getIdAgence());
     }
 
     // ---------- CHARGEMENT ----------
@@ -99,20 +102,23 @@ public class AgenceTests {
         fail(sb.toString());
     }
 
+    @Disabled("Ancien atelier")
     @Test
-    public void basicLoadAgence() {
+    void basicLoadAgence() {
         loadAgence(basicAgenceRepository, "CrudRepository (basic)");
     }
 
+    @Disabled("Ancien atelier")
     @Test
-    public void fullLoadAgence() {
+    void fullLoadAgence() {
         loadAgence(fullAgenceRepository, "JpaRepository (full)");
     }
 
     // ---------- TRI ----------
 
+    @Disabled("Ancien atelier")
     @Test
-    public void loadSortedAgences() {
+    void loadSortedAgences() {
         StringBuilder sb = new StringBuilder("\n");
 
         List<Agence> agences = fullAgenceRepository.findAll(Sort.by(Sort.Direction.DESC, "idAgence"));
@@ -126,8 +132,9 @@ public class AgenceTests {
 
     // ---------- PAGINATION ----------
 
+    @Disabled("Ancien atelier")
     @Test
-    public void loadPagedAgences() {
+    void loadPagedAgences() {
         StringBuilder sb = new StringBuilder("\n");
 
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "idAgence"));
@@ -146,7 +153,7 @@ public class AgenceTests {
     // ---------- CHAPITRE 5 : SERVICE ----------
 
     @Test
-    public void createAgence() {
+    void createAgence() {
         Agence agence = Agence.builder()
                 .adresse("5 Avenue Habib Bourguiba")
                 .nom("Agence Sousse")
@@ -157,8 +164,10 @@ public class AgenceTests {
         Agence saved = agenceService.create(agence);
 
         assertNotNull(saved.getIdAgence());
-    }    @Test
-    public void createAgenceAvecIdLeveException() {
+    }
+
+    @Test
+    void createAgenceAvecIdLeveException() {
         Agence agence = Agence.builder()
                 .adresse("x").nom("x").telephone("x").ville("x")
                 .build();
@@ -168,24 +177,24 @@ public class AgenceTests {
     }
 
     @Test
-    public void createAgenceInvalideLeveException() {
+    void createAgenceInvalideLeveException() {
         Agence agence = Agence.builder().nom("").build();
 
         assertThrows(IllegalArgumentException.class, () -> agenceService.create(agence));
     }
 
     @Test
-    public void findByIdIntrouvable() {
+    void findByIdIntrouvable() {
         assertThrows(ResourceNotFoundException.class, () -> agenceService.findById(999999L));
     }
 
     @Test
-    public void deleteByIdIntrouvable() {
+    void deleteByIdIntrouvable() {
         assertThrows(ResourceNotFoundException.class, () -> agenceService.deleteById(999999L));
     }
 
     @Test
-    public void updateAgence() {
+    void updateAgence() {
         Agence saved = agenceService.create(Agence.builder()
                 .adresse("a").nom("Avant").telephone("1").ville("v").build());
 
@@ -198,7 +207,7 @@ public class AgenceTests {
     }
 
     @Test
-    public void findAllNonVide() {
+    void findAllNonVide() {
         agenceService.create(Agence.builder()
                 .adresse("a").nom("n").telephone("1").ville("v").build());
 

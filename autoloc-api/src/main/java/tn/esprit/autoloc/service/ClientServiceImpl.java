@@ -4,14 +4,15 @@ import org.springframework.stereotype.Service;
 import tn.esprit.autoloc.Utils;
 import tn.esprit.autoloc.domain.Client;
 import tn.esprit.autoloc.repository.IClientRepository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class ClientServiceImpl extends GenericServiceImpl<Client, Long> implements IClientService {
 
     public ClientServiceImpl(IClientRepository repository) {
         super(repository);
     }
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientServiceImpl.class);
     @Override
     protected String getEntityName() {
         return "Client";
@@ -38,5 +39,15 @@ public class ClientServiceImpl extends GenericServiceImpl<Client, Long> implemen
                 && Utils.isNotEmpty(c.getNom())
                 && Utils.isNotEmpty(c.getPrenom())
                 && Utils.isNotEmpty(c.getEmail());
+    }
+
+    // ---------- Méthodes ajoutées pour l'analyse ----------
+
+    public boolean estValide(Client c) {
+        return c.getNom() != null;
+    }
+
+    public void afficher(Client c) {
+        LOGGER.info("Client : {}", c.getNom());
     }
 }
