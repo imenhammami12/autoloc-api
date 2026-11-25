@@ -117,8 +117,9 @@ class GenericServiceImplTest {
     @Test
     void updateIntrouvableLeveException() {
         when(repository.findById(9L)).thenReturn(Optional.empty());
+        Item item = new Item(null, "x");
 
-        assertThrows(ResourceNotFoundException.class, () -> service.update(9L, new Item(null, "x")));
+        assertThrows(ResourceNotFoundException.class, () -> service.update(9L, item));
     }
 
     @Test
